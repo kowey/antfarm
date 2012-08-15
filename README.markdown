@@ -86,7 +86,7 @@ Or just refer to the class of objects itself (eg. “ants like sugar”)
     $ antfarm a
     ants
 
-Or talk about apart different individual objects in the order you
+Or tell apart different individual objects in the order you
 mentioned them
 
     $ antfarm a42 b59, a8, a90, a42, a90 b59
