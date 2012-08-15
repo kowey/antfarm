@@ -64,21 +64,21 @@ But if you refer to a different object(s)…
 You can also provide cardinality constraints instead of referring to
 specific objects
 
-    $ antfarm 'a >= 3'
+    $ antfarm a ge 3
     at least three ants
 
-    $ antfarm 'a = 3'
+    $ antfarm a eq 3
     exactly three ants
 
 Or provide both constraints and instances of objects
 
-    $ antfarm 'a <= 3'
+    $ antfarm a le 3
     at most three ants
 
-    $ antfarm a1 'a <= 3'
+    $ antfarm a1 a le 3
     between one and three ants
 
-    $ antfarm a1 'a <= 3', a1 'a <= 3'
+    $ antfarm a1 a le 3, a1 a le 3
     between one and three ants, the same ants
 
 Or just refer to the class of objects itself (eg. “ants like sugar”)
@@ -94,8 +94,8 @@ mentioned them
 
 Or (recursively) provide examples of objects
 
-    $ antfarm 'A >= 2 (M = 2 o1)'
+    $ antfarm 'A ge 2 (M eq 2 o1)'
     at least two animals (exactly two mammals, an owl)
 
-    $ antfarm 'A >= 2 (M = 2 (d1 c2) o1)'
+    $ antfarm 'A ge 2 (M eq 2 (d1 c2) o1)'
     at least two animals (exactly two mammals (a dog, a cat), an owl)
