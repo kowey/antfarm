@@ -58,11 +58,13 @@ englishDiscriminator det discr =
         PlainCardinal n  -> [ cardinal n ]
         CardinalOfThe n  -> [ cardinal n, "of", "the" ]
         The              -> [ "the" ]
-        Bounded (SayAtLeast n)   -> [ "at", "least", cardinal n ]
-        Bounded (SayAtMost  n)   -> [ "at", "most" , cardinal n ]
-        Bounded (SayExactly n)   -> [ "exactly", cardinal n ]
-        Bounded (SayBetween n m) -> [ "between", cardinal n, "and", cardinal m ]
+        Bounded (SayAtLeast n)   -> [ "at", "least", tnum n ]
+        Bounded (SayAtMost  n)   -> [ "at", "most" , tnum n ]
+        Bounded (SayExactly n)   -> [ "exactly", tnum n ]
+        Bounded (SayBetween n m) -> [ "between", tnum n, "and", tnum m ]
         Bounded (SayArbitrary t) -> [ t ]
+  where
+    tnum = T.pack . show
 
 -- defaultDet :: Text -> SingPlu [Text]
 -- defaultDet word = SP [indefiniteDet word] ["the"]

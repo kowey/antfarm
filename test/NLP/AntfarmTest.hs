@@ -62,22 +62,22 @@ t_rx = testGroup "rx"
         , tcase [ RT "two boxes"            "b1 b2" ]
         , tcase [ RT "two boxes and an ant" "b1 a1 b2" ]
         , tcase [ RT "an ant and two boxes" "a1 b1 b2" ]
-        , tcase [ RT "at least one ant"       "a>=1 a"  ]
-        , tcase [ RT "at least two ants"      "a>=2 a0" ]
-        , tcase [ RT "at least two ants"      "a>=2"    ]
-        , tcase [ RT "at least two ants"      "a>=2 a"  ]
-        , tcase [ RT "at least three ants"      "a>=3 a>=2 a" ]
-        , tcase [ RT "at least three ants"      "a>=2 a>=3 a" ]
-        , tcase [ RT "exactly one ant"        "a=1  a0" ]
-        , tcase [ RT "exactly one ant"        "a=1  a"  ]
-        , tcase [ RT "exactly three ants"     "a=3  a"  ]
-        , tcase [ RT "between two and three ants" "a>=2 a<=3 a" ]
-        , tcase [ RT "between two and three ants" "a>=2 a<=3 a" ]
-        , tcase [ RT "between one and three ants" "a<=3 a1" ]
-        , tcase [ RT "between two and three ants" "a<=3 a1 a2" ]
-        , tcase [ RT "two ants (exactly three boxes, a cat)"
+        , tcase [ RT "at least 1 ant"       "a>=1 a"  ]
+        , tcase [ RT "at least 2 ants"      "a>=2 a0" ]
+        , tcase [ RT "at least 2 ants"      "a>=2"    ]
+        , tcase [ RT "at least 2 ants"      "a>=2 a"  ]
+        , tcase [ RT "at least 3 ants"      "a>=3 a>=2 a" ]
+        , tcase [ RT "at least 3 ants"      "a>=2 a>=3 a" ]
+        , tcase [ RT "exactly 1 ant"        "a=1  a0" ]
+        , tcase [ RT "exactly 1 ant"        "a=1  a"  ]
+        , tcase [ RT "exactly 3 ants"     "a=3  a"  ]
+        , tcase [ RT "between 2 and 3 ants" "a>=2 a<=3 a" ]
+        , tcase [ RT "between 2 and 3 ants" "a>=2 a<=3 a" ]
+        , tcase [ RT "between 1 and 3 ants" "a<=3 a1" ]
+        , tcase [ RT "between 2 and 3 ants" "a<=3 a1 a2" ]
+        , tcase [ RT "two ants (exactly 3 boxes, a cat)"
                   "a1 a2 (b=3 c1)" ]
-        , tcase [ RT "two ants (exactly three boxes (two dogs), a cat)"
+        , tcase [ RT "two ants (exactly 3 boxes (two dogs), a cat)"
                   "a1 a2 (b=3 (d1 d3) c1)" ]
         ]
     -- -------------------------------------------------- across
@@ -114,20 +114,20 @@ t_rx = testGroup "rx"
         , tcase [ RT "two ants"        "a1 a2"
                 , RT "the ants"        "a2 a1"
                 ]
-        , tcase [ RT "at least three ants" "a>=3 a1"
-                , RT "at least three ants" "a>=3 a2" -- a1 != a2
+        , tcase [ RT "at least 3 ants" "a>=3 a1"
+                , RT "at least 3 ants" "a>=3 a2" -- a1 != a2
                 ]
-        , tcase [ RT "at least three ants" "a>=3 a1"
-                , RT "at least two ants"   "a>=2 a1" -- 2 != 3
+        , tcase [ RT "at least 3 ants" "a>=3 a1"
+                , RT "at least 2 ants"   "a>=2 a1" -- 2 != 3
                 ]
-        , tcase [ RT "at least three ants" "a>=3 a1"
+        , tcase [ RT "at least 3 ants" "a>=3 a1"
                 , RT "the same ants"       "a>=3 a1"
                 ]
         , tcase [ RT "two ants"            "a1 a2"
-                , RT "one of the ants and at most three boxes" "a1 b<=3"
+                , RT "one of the ants and at most 3 boxes" "a1 b<=3"
                 ]
         , tcase [ RT "two ants"            "a1 a2"
-                , RT "one of the ants and between one and three boxes" "a1 b<=3 b2"
+                , RT "one of the ants and between 1 and 3 boxes" "a1 b<=3 b2"
                 ]
         , tcase [ RT "two ants"        "a1 a2"
                 , RT "one of the ants" "a2"
@@ -138,11 +138,11 @@ t_rx = testGroup "rx"
                 , RT "ants"            "a"
                 , RT "another ant"     "a1"
                 ]
-        , tcase [ RT "at least two animals (a cat)"     "A>=2 (c1)"
+        , tcase [ RT "at least 2 animals (a cat)"     "A>=2 (c1)"
                 , RT "the same animals"                 "A>=2 (c1)"
                 ]
-        , tcase [ RT "at least two animals (a cat)"        "A>=2 (c1)"
-                , RT "at least two animals (another cat)"  "A>=2 (c2)"
+        , tcase [ RT "at least 2 animals (a cat)"        "A>=2 (c1)"
+                , RT "at least 2 animals (another cat)"  "A>=2 (c2)"
                 ]
       ] -- a third ant
         -- , RT "the first ant"   "a2"
