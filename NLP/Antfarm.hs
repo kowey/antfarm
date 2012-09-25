@@ -1,6 +1,6 @@
 {-# LANGUAGE DeriveDataTypeable, ViewPatterns, OverloadedStrings, TupleSections #-}
 
--- | Module    : NLP.Antfarm.History
+-- |
 -- Copyright   : 2012 Eric Kow (Computational Linguistics Ltd.)
 -- License     : BSD3
 -- Maintainer  : eric.kow@gmail.com

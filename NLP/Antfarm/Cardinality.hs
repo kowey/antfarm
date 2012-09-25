@@ -1,6 +1,6 @@
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE ViewPatterns #-}
--- | Module    : NLP.Antfarm.Cardinality
+-- |
 -- Copyright   : 2012 Eric Kow (Computational Linguistics Ltd.)
 -- License     : BSD3
 -- Maintainer  : eric.kow@gmail.com

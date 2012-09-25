@@ -1,5 +1,5 @@
 {-# LANGUAGE OverloadedStrings #-}
--- | Module    : NLP.Antfarm.English
+-- |
 -- Copyright   : 2012 Eric Kow (Computational Linguistics Ltd.)
 -- License     : BSD3
 -- Maintainer  : eric.kow@gmail.com

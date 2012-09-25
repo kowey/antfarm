@@ -1,3 +1,11 @@
+-- |
+-- Copyright   : 2012 Eric Kow (Computational Linguistics Ltd.)
+-- License     : BSD3
+-- Maintainer  : eric.kow@gmail.com
+-- Stability   : experimental
+-- Portability : portable
+--
+-- Referring expressions and discourse units
 module NLP.Antfarm.Refex where
 
 import Data.Maybe ( mapMaybe )

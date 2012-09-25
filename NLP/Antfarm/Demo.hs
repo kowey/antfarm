@@ -1,5 +1,5 @@
 {-# LANGUAGE OverloadedStrings, TupleSections #-}
--- | Module    : NLP.Antfarm.Demo
+-- |
 -- Copyright   : 2012 Eric Kow (Computational Linguistics Ltd.)
 -- License     : BSD3
 -- Maintainer  : eric.kow@gmail.com
