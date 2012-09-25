@@ -53,10 +53,11 @@ englishDiscriminator det discr =
         NewOrdinal 2     -> [ "another" ] -- prefer "another" to "a second"
         NewOrdinal n     -> [ indefiniteDet (ordinal n), ordinal n ]
         Another 1        -> [ "another" ]
-        Another n        -> [ "another", cardinal n ]
+        Another n        -> [ "another", tnum n ]
         PlainCardinal 1  -> sg det
-        PlainCardinal n  -> [ cardinal n ]
-        CardinalOfThe n  -> [ cardinal n, "of", "the" ]
+        PlainCardinal n  -> [ tnum n ]
+        CardinalOfThe 1  -> [ "one", "of", "the" ]
+        CardinalOfThe n  -> [ tnum n, "of", "the" ]
         The              -> [ "the" ]
         Bounded (SayAtLeast n)   -> [ "at", "least", tnum n ]
         Bounded (SayAtMost  n)   -> [ "at", "most" , tnum n ]
