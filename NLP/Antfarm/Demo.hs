@@ -35,6 +35,7 @@ import qualified Text.Parsec as P
 
 import NLP.Antfarm
 import NLP.Antfarm.English
+import NLP.Antfarm.Spanish
 import NLP.Antfarm.History
 import NLP.Antfarm.Refex
 import NLP.Antfarm.Cardinality
@@ -50,11 +51,20 @@ decodeRx t =
 type RefStateT m a = StateT RefHistory m a
 type RefState a    = RefStateT Identity a
 
-nextRx :: Monad m => [DiscourseUnit] -> RefStateT m Text
-nextRx dus = do
+langNextRx :: Monad m => ([Tree SubRx] -> Text) -> [DiscourseUnit] -> RefStateT m Text
+langNextRx languageRx dus = do
    oldst <- get
    modify (addToHistory dus)
-   return $ englishRx $ rx oldst (map toSubRxInput dus)
+   return $ languageRx $ rx oldst (map toSubRxInput dus)
+
+englishNextRx :: Monad m => [DiscourseUnit] -> RefStateT m Text
+englishNextRx = langNextRx englishRx
+
+spanishNextRx :: Monad m => [DiscourseUnit] -> RefStateT m Text
+spanishNextRx = langNextRx spanishRx
+
+nextRx :: Monad m => [DiscourseUnit] -> RefStateT m Text
+nextRx = englishNextRx
 
 -- ----------------------------------------------------------------------
 --
@@ -102,6 +112,7 @@ lexMap = [ ("a", "ant")
          , ("A", "animal")
          , ("B", "bird")
          , ("M", "mammal")
+         , ("S", "sombrero")  
          ]
 
 onWords :: (Text -> Maybe Text) -> Text -> Text
