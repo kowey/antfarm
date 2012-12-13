@@ -20,6 +20,8 @@ library
                      NLP.Antfarm.Cardinality
                      NLP.Antfarm.Demo
                      NLP.Antfarm.English
+                     -- Spanish is not ready by it's needed to be exported for the tests
+                     NLP.Antfarm.Spanish
                      NLP.Antfarm.History
                      NLP.Antfarm.Internal
                      NLP.Antfarm.Refex

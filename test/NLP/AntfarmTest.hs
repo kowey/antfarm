@@ -46,6 +46,7 @@ import NLP.Antfarm.Refex
 suite :: Test.Framework.Test
 suite = testGroup "NLP.Antfarm"
     [ t_rx
+    , t_rx_es  
     ]
 
 data RefTest = RT
@@ -152,16 +153,33 @@ t_rx = testGroup "rx"
     descr xs = T.unpack $
         intercalateRx (map rtInp xs)
         <+> (parens . intercalateRx $ map rtOut xs)
-    tcase xs = testCase (descr xs) $ assertRefTests xs
+    tcase xs = testCase (descr xs) $ assertRefTests englishNextRx xs
+    
+t_rx_es :: Test.Framework.Test
+t_rx_es = testGroup "rx_es"
+    -- -------------------------------------------------- within
+    [ testGroup "simple Spanish"
+        [ tcase [ RT "a sombrero"                "S1"  -- wrong, si si
+                , RT "el sombrero"               "S1"  
+                , RT "otro sombrero"             "S2"  
+                ]
+        ]
+    ]
+  where
+    descr xs = T.unpack $
+        intercalateRx (map rtInp xs)
+        <+> (parens . intercalateRx $ map rtOut xs)
+    tcase xs = testCase (descr xs) $ assertRefTests spanishNextRx xs
 
-assertRefTests :: [RefTest] -> IO ()
-assertRefTests rts =
+
+assertRefTests :: ([DiscourseUnit] -> RefStateT IO Text) -> [RefTest] -> IO ()
+assertRefTests languageRx rts =
     evalStateT (mapM_ next rts) emptyHistory
   where
     next rt =
        case decodeRx (T.unpack (rtInp rt)) of
           Left err  -> liftIO $ assertFailure (show err)
           Right rxs -> do
-              res <- nextRx rxs
+              res <- languageRx rxs
               let msg = T.unpack (rtOut rt)
               liftIO $ assertEqual msg (rtOut rt) res
