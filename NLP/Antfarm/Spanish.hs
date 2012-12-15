@@ -1,8 +1,8 @@
 {-# LANGUAGE OverloadedStrings #-}
--- | Module    : NLP.Antfarm.Spanish
--- Copyright   : 2012 Eric Kow (Computational Linguistics Ltd.)
+-- |
+-- Copyright   : 2012 Pablo Duboue
 -- License     : BSD3
--- Maintainer  : eric.kow@gmail.com
+-- Maintainer  : pablo.duboue@gmail.com
 -- Stability   : experimental
 -- Portability : portable
 --
