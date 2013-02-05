@@ -1,3 +1,7 @@
+[![Build Status](https://secure.travis-ci.org/kowey/antfarm.png)](http://travis-ci.org/kowey/antfarm)
+
+## About
+
 Antfarm is a referring expression generator for use in generating
 dictionary definitions, such as this fragment below (referring
 expressions highlighted):
