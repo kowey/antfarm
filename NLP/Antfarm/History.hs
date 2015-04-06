@@ -7,7 +7,10 @@
 -- Stability   : experimental
 -- Portability : portable
 --
--- Discourse history tracking
+-- Discourse history tracking. The history module provides an
+-- abstraction representation of what has already been said during refex
+-- generation and a number of queries that would help the refex
+-- generator to steer its decsions
 module NLP.Antfarm.History where
 
 import Control.Applicative ((<$>))
@@ -49,6 +52,10 @@ instance Ord (Tree RefGroup) where
              EQ -> compare ks1 ks2
              x  -> x
 
+-- | The discoure history keeps track of decisions we have already made
+--   about how to realise previous parts of the referring expression.
+--   This sort of information can help us to make more fluent decisions
+--   on how to realise the current fragment
 data RefHistory  = RefHistory
     { -- | How many times a 'DiscourseUnit' has been mentioned
       rhCount :: Map.Map DiscourseUnit RefCount
@@ -63,9 +70,6 @@ data RefHistory  = RefHistory
     , rhOrder :: Map.Map Text [Text]
     }
 type RefCount    = Int
-
-plusRefCount :: RefCount -> RefCount -> RefCount
-plusRefCount = (+)
 
 -- | Discourse history without any objects
 emptyHistory :: RefHistory
@@ -84,11 +88,18 @@ emptyHistory = RefHistory Map.empty Map.empty
 --   history.
 addToHistory :: [DiscourseUnit] -> RefHistory -> RefHistory
 addToHistory ks st = st
-    { rhCount = foldl' plusOne    (rhCount st) (concatMap subtrees ks)
+    { -- incr number of mentions for each mention of an
+      -- entity in the expression
+      rhCount = foldl' plusOne    (rhCount st) (concatMap subtrees ks)
+      -- note ordinal position (eg. 1st, 2nd) of any new singleton
+      -- instances of each entity type we see
     , rhOrder = foldl' addOrdinal (rhOrder st) (concatMap duSingletons ks)
     }
   where
-    plusOne    m k = Map.insertWith' plusRefCount k 1 m
+    -- | incr ref counts of 'k' in 'm'
+    plusOne    m k = Map.insertWith' (+) k 1 m
+    -- | note ordinal position of instances 'i' (relative to other members
+    --   of class 'c'), but only if this is the first mention of it
     addOrdinal m (c,i) =
         Map.insertWith' append c [i] m
       where
@@ -129,6 +140,16 @@ noteImplicitBounds rg =
    where
      bounds1 = rgBounds rg
      bounds2 =
+         -- We only ever modify the lower bound constraints:
+         --
+         -- * if there's a lower bound constraint, raise it to
+         --   the number of implicits (as needed)
+         -- * otherwise, set the lower bound (but only if we
+         --   already have an explicit constraint, in the form
+         --   of an upper bound)
+         --
+         -- Note also we don't bother to verify that upper bounds
+         -- make sense wrt their lower bounds
          case bLower bounds1 of
              Just l  -> bounds1 { bLower = Just (max l implicits) }
              Nothing -> if isJust (bUpper bounds1)
@@ -152,15 +173,16 @@ hasDistractorGroup st k =
 --   in the discourse history.
 --
 --   A distractor is defined (here) as something that has the the same class
---   as @k@ but a different index.
+--   as @k@ but a different index, basically anything that might be confused
+--   for the object in question
 distractorGroups :: RefHistory -> RefKey -> [DiscourseUnit]
 distractorGroups st (c, i) =
     filter distracting (Map.keys (rhCount st))
   where
     distracting = not . safe
-    safe (Node rg2 _) = c /= rgClass rg2
-                     || i `Set.member` rgIdxes rg2
-                     || isClasswide rg2
+    safe (Node rg2 _) = c /= rgClass rg2 -- different classes (OK)
+                     || i `Set.member` rgIdxes rg2 -- includes me (OK)
+                     || isClasswide rg2 -- classes aren't instances (OK)
 
 -- | @hasSupersetMention st g@ returns whether or not the discourse history
 --   contains a group that includes all members of @g@
@@ -205,15 +227,20 @@ mentionOrder :: RefHistory -> RefKey -> Maybe Int
 mentionOrder rh (c,i) =
    if isOnlySingletons rh
       then case Map.lookup c (rhOrder rh) of
+               -- +1 is for natural language (we don't say "zeroth")
                Just is | length is > 1 -> (+ 1) <$> elemIndex i is
                _                       -> Nothing
       else Nothing
   where
      -- the c's never appear with others of their own kind in the same
-     -- 'RefGroup'
+     -- 'RefGroup' [we want to be able to say things like "the 5th ant"
+     -- but we haven't yet worked out how this would work if 'ant' has
+     -- already appeared in expressions like "the 3 ants"... in that
+     -- case, what does 5th mean?]
      isOnlySingletons = not . any isMultiMatch
                       . Map.keys
                       . rhCount
+     -- if a refgroup is of the given class (and has more than one elm)
      isMultiMatch (Node g _) =
          c == rgClass g && Set.size (rgIdxes g) > 1
 
@@ -221,9 +248,10 @@ mentionOrder rh (c,i) =
 -- distractors to @g@ in the discourse history
 hasTidyBackpointer :: RefHistory -> DiscourseUnit -> Bool
 hasTidyBackpointer st du@(Node rg _) =
-    not (any (hasDistractorGroup st) keys)
-    && lastMentions st du == 0
-    && hasSupersetMention st du
+    not (any (hasDistractorGroup st) keys) -- (tidy) nothing to confuse w du
+    && lastMentions st du == 0  -- (tidy) first time we mentioned du
+    && hasSupersetMention st du -- (backpointer) but we already mentioned
+                                -- a group that includes all members of du
   where
     -- keys are just class/idx tuples ('a', '3') for example
     keys = Set.toList (refKeys rg)
@@ -244,7 +272,10 @@ isTheOther st (c,i) =
           Just b  -> lastMentions st (mkSingletonDu (c,b)) >= 1
           Nothing -> False
     isBuddy _ = False
-    --
+    -- only trigger this for classes where they've been exactly
+    -- two instances ["the ant, the other ant" is fine, but
+    -- "the ant, a second ant, the other ant" is confusing...
+    -- which other ant?]
     getBuddy (Set.toList -> idx) | length idx == 2 =
          case delete i idx of
              [b] -> Just b -- must be *exactly* one other item

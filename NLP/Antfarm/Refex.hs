@@ -25,23 +25,30 @@ import NLP.Antfarm.Cardinality
 --   A subunit corresponds to 'RefGroup' (but in practice,
 --   we need the whole 'DiscourseUnit', not just the 'RefGroup'
 --   root)
+--
 data SubRxInput = SubRxInput
-    { srxInpDet    :: SingPlu [Text] -- ^ determiner (can be empty)
+    { srxInpDet    :: SingPlu [Text] -- ^ default determiner
+                                     --   (can be empty)
     , srxInpWord   :: SingPlu Text   -- ^ main word
-    , srxInpEntity :: DiscourseUnit
+    , srxInpEntity :: DiscourseUnit  -- ^ entities to realise
     }
 
 -- | Output for a subunit of a referring expression
 data SubRx = SubRx
     { srxNumber        :: Number
     , srxDiscriminator :: Discriminator
-    , srxDet           :: SingPlu [Text]
+    , srxDet           :: SingPlu [Text] -- ^ default determiner(s)
     , srxWord          :: SingPlu Text
     }
   deriving (Eq, Show)
 
 -- | A single referring expression has subunits, each of which
 --   potentially having examples
+--
+--   TODO: it's no longer entirely clear to me why both the outer
+--   input structure and the discourse units have a tree structure
+--   that in practice seem to mirror each other. This might be a
+--   code smell or possibly deliberate
 type RxInput = [Tree SubRxInput]
 
 -- | A referring expression
@@ -66,7 +73,7 @@ type DiscourseUnit = Tree RefGroup
 --   dogs”, the “at most two dogs” and “three cats” would each be 'RefGroup's
 data RefGroup = RefGroup
     { rgClass  :: Text
-    , rgIdxes  :: Set.Set Text
+    , rgIdxes  :: Set.Set Text -- indices are just arbitrary strings
     , rgBounds :: Bounds
     }
   deriving (Ord, Eq)
@@ -82,6 +89,8 @@ type RefKey      = (Text, Text)
 -- * Bounds
 -- ----------------------------------------------------------------------
 
+-- | Essentially a lower/upper bound pair with a shunt for malformed
+--   constraints (this was needed in a wider application)
 data Bounds = Bounds
     { bUnknown :: [Text]
         --  the whole idea of unknown constraints makes me very
@@ -97,6 +106,7 @@ data Bounds = Bounds
 emptyBounds :: Bounds
 emptyBounds = Bounds [] Nothing Nothing
 
+-- | Merge cardinality constraints into a single lower/upper bound range
 explicitBounds :: [Constraint] -> Bounds
 explicitBounds cs = Bounds
     { bUnknown = [ t | Unknown t <- cs ]
