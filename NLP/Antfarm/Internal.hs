@@ -1,4 +1,4 @@
-{-# LANGUAGE DeriveDataTypeable, ViewPatterns, OverloadedStrings, TupleSections #-}
+{-# LANGUAGE TupleSections #-}
 
 -- |
 -- Copyright   : 2012 Eric Kow (Computational Linguistics Ltd.)
@@ -45,7 +45,7 @@ subrx :: RefHistory       -- ^ prior decisions
       -> Tree SubRxInput  -- ^ expressions to realise
       -> Tree SubRx       -- ^ abstract decision per piece of input
 subrx st (Node srx egs) =
-    (Node root kids)
+    Node root kids
   where
     root  = SubRx num discr (srxInpDet srx) (srxInpWord srx)
     num   = surfaceNumber st du
@@ -115,7 +115,7 @@ subrxNumber (Node rg _) =
            -- at most 5, between 3 and 7); treat as plural
            _                  -> Just FN_Plural
     -- fallback case if there are malformed constraints
-    constrAgr (Bounds _ _ _) = Just FN_Plural
+    constrAgr (Bounds {}) = Just FN_Plural
 
 -- ----------------------------------------------------------------------
 -- Discriminator
