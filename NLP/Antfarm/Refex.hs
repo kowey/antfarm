@@ -71,8 +71,9 @@ data RefGroup = RefGroup
     }
   deriving (Ord, Eq)
 
-rgIdxList :: RefGroup -> [Text]
-rgIdxList = Set.toList . rgIdxes
+-- | Set of unique keys in a ref group
+refKeys :: RefGroup -> Set.Set RefKey
+refKeys rg = Set.map (\i -> (rgClass rg, i)) (rgIdxes rg)
 
 -- | A unique object
 type RefKey      = (Text, Text)

@@ -225,7 +225,8 @@ hasTidyBackpointer st du@(Node rg _) =
     && lastMentions st du == 0
     && hasSupersetMention st du
   where
-    keys = [ (rgClass rg, idx) | idx <- Set.toList (rgIdxes rg) ]
+    -- keys are just class/idx tuples ('a', '3') for example
+    keys = Set.toList (refKeys rg)
 
 -- | @isTheOther st k@ returns whether or not there is a two-member group in
 --   the discourse history which @k@ is a member of such that the other

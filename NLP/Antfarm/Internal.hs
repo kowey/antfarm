@@ -113,7 +113,7 @@ discriminate :: RefHistory   -- ^ discourse history
 discriminate st du@(Node rg _) =
     helper $ boundsText bounds
   where
-    keys    = [ (rgClass rg, idx) | idx <- rgIdxList rg ]
+    keys    = Set.toList (refKeys rg)
     bounds  = rgBounds rg
     count   = Set.size (rgIdxes rg)
     --
