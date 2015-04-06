@@ -1,4 +1,5 @@
 {-# LANGUAGE TupleSections #-}
+{-# LANGUAGE ViewPatterns #-}
 
 -- |
 -- Copyright   : 2012 Eric Kow (Computational Linguistics Ltd.)
