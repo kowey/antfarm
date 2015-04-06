@@ -250,7 +250,7 @@ mentionOrder rh (c,i) =
 hasTidyBackpointer :: RefHistory -> DiscourseUnit -> Bool
 hasTidyBackpointer st du@(Node rg _) =
     not (any (hasDistractorGroup st) keys) -- (tidy) nothing to confuse w du
-    && isFirstMention sst du    -- (tidy)
+    && isFirstMention st du     -- (tidy)
     && hasSupersetMention st du -- (backpointer) but we already mentioned
                                 -- a group that includes all members of du
   where
