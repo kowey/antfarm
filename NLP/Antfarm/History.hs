@@ -76,7 +76,7 @@ emptyHistory :: RefHistory
 emptyHistory = RefHistory Map.empty Map.empty
 
 -- ----------------------------------------------------------------------
--- building the discourse history
+-- * building the discourse history
 -- ----------------------------------------------------------------------
 
 -- See note `discourse tree'
@@ -158,7 +158,7 @@ noteImplicitBounds rg =
      implicits = Set.size (rgIdxes rg)
 
 -- ----------------------------------------------------------------------
--- query
+-- * query
 -- ----------------------------------------------------------------------
 
 -- | @hasDistractorGroup st k@ returns whether or not the discourse history
@@ -212,11 +212,12 @@ lastMention st (c,i) =
 lastMentions :: RefHistory -> DiscourseUnit -> Int
 lastMentions st k = Map.findWithDefault 0 k (rhCount st)
 
+-- | True if the given instance @k@ has never been mentioned before
 isFirstMention :: RefHistory -> RefKey -> Bool
 isFirstMention st k = lastMention st k == 0
 
 -- ----------------------------------------------------------------------
--- subtle queries
+-- * subtle queries
 -- ----------------------------------------------------------------------
 
 -- | If it makes sense to refer to a key using an ordinal expression,
@@ -249,7 +250,7 @@ mentionOrder rh (c,i) =
 hasTidyBackpointer :: RefHistory -> DiscourseUnit -> Bool
 hasTidyBackpointer st du@(Node rg _) =
     not (any (hasDistractorGroup st) keys) -- (tidy) nothing to confuse w du
-    && lastMentions st du == 0  -- (tidy) first time we mentioned du
+    && isFirstMention sst du    -- (tidy)
     && hasSupersetMention st du -- (backpointer) but we already mentioned
                                 -- a group that includes all members of du
   where
@@ -291,7 +292,7 @@ isClasswide :: RefGroup -> Bool
 isClasswide rg = Set.null (rgIdxes rg) && isExact rg
 
 -- ----------------------------------------------------------------------
--- odds and ends
+-- * odds and ends
 -- ----------------------------------------------------------------------
 
 -- | Like 'flatten', but returns whole subtrees instead of
