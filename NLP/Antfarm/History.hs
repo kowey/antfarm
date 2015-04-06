@@ -1,4 +1,4 @@
-{-# LANGUAGE FlexibleInstances #-}
+{-# LANGUAGE DeriveDataTypeable, OverloadedStrings, FlexibleInstances #-}
 {-# LANGUAGE ViewPatterns, TupleSections #-}
 -- |
 -- Copyright   : 2012 Eric Kow (Computational Linguistics Ltd.)
